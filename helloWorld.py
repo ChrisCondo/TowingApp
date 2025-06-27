@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 def main():
     # Color scheme - modern and appealing
@@ -7,6 +6,7 @@ def main():
         'primary': '#2563eb',      # Blue
         'primary_hover': '#1d4ed8', # Darker blue
         'secondary': '#64748b',     # Slate gray
+        'secondary_hover': '#475569', # Darker secondary
         'success': '#059669',       # Green
         'error': '#dc2626',         # Red
         'background': '#f8fafc',    # Light gray
@@ -88,7 +88,7 @@ def main():
         if button == submit_btn:
             button.config(bg=COLORS['primary_hover'])
         elif button == clear_btn:
-            button.config(bg='#475569')  # Darker secondary
+            button.config(bg=COLORS['secondary_hover'])
 
     def on_button_hover_leave(event):
         # Button hover effect
@@ -118,8 +118,8 @@ def main():
 
     def update_status_message(message):
         # Update the status message below the inputs
-        if hasattr(update_status_message, 'status_label'):
-            update_status_message.status_label.config(text=message)
+        # This function will be redefined after status_label is created
+        pass
 
     def on_entry_focus_in(event):
         # Show helpful hint when user focuses on an entry
@@ -148,10 +148,6 @@ def main():
     root.configure(bg=COLORS['background'])
     root.resizable(False, False)
 
-    # Configure styles
-    style = ttk.Style()
-    style.theme_use('clam')
-
     # Main container with padding
     main_frame = tk.Frame(root, bg=COLORS['background'])
     main_frame.pack(fill='both', expand=True, padx=30, pady=30)
@@ -176,11 +172,9 @@ def main():
         text="Enter three numbers to calculate their sum",
         font=('Segoe UI', 12),
         fg=COLORS['text_light'],
-        bg=COLORS['card'],
-        pady=10
-
+        bg=COLORS['card']
     )
-    subtitle_label.pack()
+    subtitle_label.pack(pady=(0, 20))
 
     # Input section
     input_frame = tk.Frame(main_frame, bg=COLORS['card'], relief='solid', bd=1)
@@ -274,8 +268,9 @@ def main():
     )
     status_label.pack(anchor='w', pady=(0, 20))
 
-    # Store reference for the update function
-    update_status_message.status_label = status_label
+    # Redefine update_status_message now that status_label exists
+    def update_status_message(message):
+        status_label.config(text=message)
 
     # Button section
     button_frame = tk.Frame(input_container, bg=COLORS['card'])
@@ -370,7 +365,6 @@ def main():
     exit_btn.pack()
 
     # Keyboard shortcuts
-    root.bind('<Return>', lambda _: on_submit())
     root.bind('<Control-q>', lambda _: root.destroy())
 
     # Focus on first entry
